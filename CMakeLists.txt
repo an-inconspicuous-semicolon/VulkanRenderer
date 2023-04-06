@@ -10,7 +10,7 @@ include(CMake/pre_lib.cmake)
 
 set(CMAKE_CXX_STANDARD 20)
 
-add_library(${PROJECT_NAME} SHARED ${LIBRARY_INCLUDE_PATH}/${PROJECT_NAME}/api.hpp Library/src/VulkanRenderer.cpp Library/include/VulkanRenderer/VulkanRenderer.hpp Library/include/VulkanRenderer/common.hpp Library/include/VulkanRenderer/Utility/Wrapper.hpp)
+add_library(${PROJECT_NAME} SHARED ${LIBRARY_INCLUDE_PATH}/${PROJECT_NAME}/api.hpp Library/src/VulkanRenderer.cpp Library/include/VulkanRenderer/VulkanRenderer.hpp Library/include/VulkanRenderer/common.hpp Library/include/VulkanRenderer/Utility/Wrapper.hpp Library/include/VulkanRenderer/Utility/Wrapper.hpp Library/include/VulkanRenderer/Utility/result.hpp Library/src/Window.cpp Library/include/VulkanRenderer/Window.hpp Testing/Window/main.cpp)
 target_include_directories(${PROJECT_NAME}
         PUBLIC ${LIBRARY_INCLUDE_PATH}
         PRIVATE ${LIBRARY_INCLUDE_PATH}/${PROJECT_NAME})
@@ -18,6 +18,6 @@ target_link_libraries(${PROJECT_NAME}
         PUBLIC
         PRIVATE glfw glm)
 
-target_precompile_headers(${PROJECT_NAME} PRIVATE ${LIBRARY_INCLUDE_PATH}/${PROJECT_NAME}/common.hpp)
+target_precompile_headers(${PROJECT_NAME} PUBLIC ${LIBRARY_INCLUDE_PATH}/${PROJECT_NAME}/common.hpp)
 
 include(CMake/post_lib.cmake)

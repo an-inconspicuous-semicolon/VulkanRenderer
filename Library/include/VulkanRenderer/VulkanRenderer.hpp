@@ -3,3 +3,6 @@
 //
 
 #pragma once
+
+#include <VulkanRenderer/common.hpp>
+#include <VulkanRenderer/Window.hpp>
