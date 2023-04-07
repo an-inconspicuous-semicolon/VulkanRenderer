@@ -13,7 +13,7 @@ if (!output)                     \
 {std::cout << "[FAILED]: " << name << '\n';} \
 else {std::cout << "[PASSED]: " << name << '\n';} \
 result = result && output;        \
-}
+} static_assert(true)
 
 
 bool is_window_valid(vulren::Window& window)
@@ -181,26 +181,53 @@ bool test_clear_resize()
     return has_resize_1 && !has_resize_2;
 }
 
+bool test_moving_window()
+{
+    vulren::Window window_1(100, 100, "Test");
+    GLFWwindow* window_1_ptr = window_1.get();
+
+    vulren::Window window_2(std::move(window_1));
+    GLFWwindow* window_2_ptr = window_2.get();
+
+    return window_1_ptr == window_2_ptr && !is_window_valid(window_1);
+}
+
+bool test_double_init_window()
+{
+    vulren::Window window;
+
+    auto result_1 = window.init(100, 100, "Hello, World!");
+    if (result_1.has_error()) return false;
+
+    auto result_2 = window.init(200, 200, "Hello, World!");
+    if (result_2.has_error()) return false;
+
+    // we don't check whether the pointers are identical, because glfw can return the same pointer twice.
+    return true;
+}
+
 int main()
 {
     bool result = true;
-    TEST(result, test_default(), "Default Construction")
-    TEST(result, test_direct_param(), "Construction with parameters")
-    TEST(result, test_direct_struct(), "Construction with structure")
-    TEST(result, test_delayed_param(), "Delayed initialisation with parameters")
-    TEST(result, test_delayed_struct(), "Delayed initialisation with structure")
+    TEST(result, test_default(), "Default Construction");
+    TEST(result, test_direct_param(), "Construction with parameters");
+    TEST(result, test_direct_struct(), "Construction with structure");
+    TEST(result, test_delayed_param(), "Delayed initialisation with parameters");
+    TEST(result, test_delayed_struct(), "Delayed initialisation with structure");
 
 
     vulren::Window window(100, 100, "Test");
-    TEST(result, test_getting_window(window), "Getting window")
-    TEST(result, test_getting_width(window, 100), "Getting width")
-    TEST(result, test_getting_height(window, 100), "Getting height")
-    TEST(result, test_getting_size(window, {100, 100}), "Getting size")
-    TEST(result, test_setting_width(window, 200), "Setting width")
-    TEST(result, test_setting_height(window, 200), "Setting height")
-    TEST(result, test_setting_size(window, {100, 100}), "Setting size")
-    TEST(result, test_resize(), "Checking for resize")
-    TEST(result, test_clear_resize(), "Clearing resize")
+    TEST(result, test_getting_window(window), "Getting window");
+    TEST(result, test_getting_width(window, 100), "Getting width");
+    TEST(result, test_getting_height(window, 100), "Getting height");
+    TEST(result, test_getting_size(window, {100, 100}), "Getting size");
+    TEST(result, test_setting_width(window, 200), "Setting width");
+    TEST(result, test_setting_height(window, 200), "Setting height");
+    TEST(result, test_setting_size(window, {100, 100}), "Setting size");
+    TEST(result, test_resize(), "Checking for resize");
+    TEST(result, test_clear_resize(), "Clearing resize");
+    TEST(result, test_moving_window(), "Moving Window");
+    TEST(result, test_double_init_window(), "Double window init");
 
     return !result;
 }
